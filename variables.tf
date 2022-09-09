@@ -68,3 +68,9 @@ variable "ssh_tunnel_check_sleep" {
   description = "extra time to wait for ssh tunnel to connect"
   default     = "0s"
 }
+
+variable "ssm_instance_name" {
+  type        = string
+  description = "ssm instance name (for aws)"
+  default     = ""
+}
