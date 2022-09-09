@@ -1,3 +1,7 @@
+locals {
+  port = data.external.ssh_tunnel.result.port
+  host = data.external.ssh_tunnel.result.host
+}
 
 data "external" "free_port" {
   program = [

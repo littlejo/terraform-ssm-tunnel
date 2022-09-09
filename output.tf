@@ -1,11 +1,14 @@
-
 output "port" {
-  value       = data.external.ssh_tunnel.result.port
+  value       = local.port
   description = "Port number to connect to"
 }
 
 output "host" {
-  value       = data.external.ssh_tunnel.result.host
+  value       = local.host
   description = "Host to connect to"
 }
 
+output "kubernetes_host" {
+  value       = "https://${local.host}:${local.port}"
+  description = "Host to connect to"
+}
