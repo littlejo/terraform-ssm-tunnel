@@ -28,6 +28,13 @@ if [ -z "$MPID" ] ; then
   export SHELL_CMD="`echo $query | sed -e 's/^.*\"shell_cmd\": *\"//' -e 's/\",.*$//g' -e 's/\\\"/\"/g'`"
   export SSH_TUNNEL_CHECK_SLEEP="`echo $query | sed -e 's/^.*\"ssh_tunnel_check_sleep\": *\"//' -e 's/\",.*$//g' -e 's/\\\"/\"/g'`"
   export CREATE="`echo $query | sed -e 's/^.*\"create\": *\"//' -e 's/\",.*$//g' -e 's/\\\"/\"/g'`"
+  export SSM_INSTANCE_NAME="`echo $query | sed -e 's/^.*\"ssm_instance_name\": *\"//' -e 's/\".*$//g'`"
+
+  if [ "X$SSM_INSTANCE_NAME" != "X" ] ; then
+    export INSTANCE_ID=$(aws ssm describe-instance-information --filters "Key=tag:Name,Values=$SSM_INSTANCE_NAME" | jq -r '.InstanceInformationList[].InstanceId')
+    export GATEWAY_HOST=$INSTANCE_ID
+    export SSH_CMD="$SSH_CMD -o ProxyCommand=\"sh -c \"aws ssm start-session --target $INSTANCE_ID --document-name AWS-StartSSHSession --parameters 'portNumber=22'\"\""
+  fi
 
   if [ "X$CREATE" = X -o "X$GATEWAY_HOST" = X ] ; then
     # No tunnel - connect directly to target host
