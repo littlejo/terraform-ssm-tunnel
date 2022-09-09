@@ -31,7 +31,7 @@ if [ -z "$MPID" ] ; then
   export SSM_INSTANCE_NAME="`echo $query | sed -e 's/^.*\"ssm_instance_name\": *\"//' -e 's/\".*$//g'`"
   export AWS_PROFILE="`echo $query | sed -e 's/^.*\"aws_profile\": *\"//' -e 's/\".*$//g'`"
 
-  if [ "X$CREATE" = X -o "X$GATEWAY_HOST" = X ] ; then
+  if [ "X$CREATE" = X -o "X$GATEWAY_HOST" = X -o "X$SSM_INSTANCE_NAME" = X] ; then
     # No tunnel - connect directly to target host
     do_tunnel=''
     cnx_host="$TARGET_HOST"
