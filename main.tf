@@ -25,6 +25,7 @@ data "external" "ssh_tunnel" {
     shell_cmd              = var.shell_cmd,
     ssh_tunnel_check_sleep = var.ssh_tunnel_check_sleep
     ssm_instance_name      = var.ssm_instance_name
+    aws_profile            = var.aws_profile
     create                 = (var.create ? "y" : "")
   }
 }

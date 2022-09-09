@@ -74,3 +74,9 @@ variable "ssm_instance_name" {
   description = "ssm instance name (for aws)"
   default     = ""
 }
+
+variable "aws_profile" {
+  type        = string
+  description = "aws profile"
+  default     = ""
+}

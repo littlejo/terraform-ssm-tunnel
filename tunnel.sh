@@ -29,6 +29,7 @@ if [ -z "$MPID" ] ; then
   export SSH_TUNNEL_CHECK_SLEEP="`echo $query | sed -e 's/^.*\"ssh_tunnel_check_sleep\": *\"//' -e 's/\",.*$//g' -e 's/\\\"/\"/g'`"
   export CREATE="`echo $query | sed -e 's/^.*\"create\": *\"//' -e 's/\",.*$//g' -e 's/\\\"/\"/g'`"
   export SSM_INSTANCE_NAME="`echo $query | sed -e 's/^.*\"ssm_instance_name\": *\"//' -e 's/\".*$//g'`"
+  export AWS_PROFILE="`echo $query | sed -e 's/^.*\"aws_profile\": *\"//' -e 's/\".*$//g'`"
 
   if [ "X$SSM_INSTANCE_NAME" != "X" ] ; then
     export INSTANCE_ID=$(aws ssm describe-instance-information --filters "Key=tag:Name,Values=$SSM_INSTANCE_NAME" | jq -r '.InstanceInformationList[].InstanceId')
