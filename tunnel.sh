@@ -34,7 +34,7 @@ if [ -z "$MPID" ] ; then
   if [ "X$SSM_INSTANCE_NAME" != "X" ] ; then
     export INSTANCE_ID=$(aws ssm describe-instance-information --filters "Key=tag:Name,Values=$SSM_INSTANCE_NAME" | jq -r '.InstanceInformationList[].InstanceId')
     export GATEWAY_HOST=$INSTANCE_ID
-    PROXY_CMD="sh -c \\\"aws ssm start-session --target $INSTANCE_ID --document-name AWS-StartSSHSession --parameters 'portNumber=22'\\\""
+    PROXY_CMD="sh -c \\\"aws ssm start-session --target $INSTANCE_ID --document-name AWS-StartSSHSession\\\""
     export SSH_CMD="$SSH_CMD -o ProxyCommand=\"$PROXY_CMD\""
   fi
 
