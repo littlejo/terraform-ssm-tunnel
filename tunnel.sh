@@ -74,11 +74,16 @@ else
     export GATEWAY_HOST=$INSTANCE_ID
     gw="$GATEWAY_HOST"
     [ "X$GATEWAY_USER" = X ] || gw="$GATEWAY_USER@$GATEWAY_HOST"
-    $SSH_CMD -o ProxyCommand=\"sh -c \\\"aws ssm start-session --target $INSTANCE_ID --document-name AWS-StartSSHSession\\\"\" -N -L $LOCAL_HOST:$LOCAL_PORT:$TARGET_HOST:$TARGET_PORT -p $GATEWAY_PORT $gw &
+    cat << EOF > /tmp/ssh_config
+host $INSTANCE_ID
+    ProxyCommand sh -c "aws ssm start-session --target $INSTANCE_ID --document-name AWS-StartSSHSession --parameters 'portNumber=%p'"
+    User ec2-user
+    StrictHostKeyChecking no
+EOF
+    ssh -F /tmp/ssh_config -N -L $LOCAL_HOST:$LOCAL_PORT:$TARGET_HOST:$TARGET_PORT -p $GATEWAY_PORT $gw &
   else
     gw="$GATEWAY_HOST"
     [ "X$GATEWAY_USER" = X ] || gw="$GATEWAY_USER@$GATEWAY_HOST"
-
     $SSH_CMD -N -L $LOCAL_HOST:$LOCAL_PORT:$TARGET_HOST:$TARGET_PORT -p $GATEWAY_PORT $gw &
   fi
 
