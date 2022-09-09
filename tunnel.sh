@@ -31,13 +31,6 @@ if [ -z "$MPID" ] ; then
   export SSM_INSTANCE_NAME="`echo $query | sed -e 's/^.*\"ssm_instance_name\": *\"//' -e 's/\".*$//g'`"
   export AWS_PROFILE="`echo $query | sed -e 's/^.*\"aws_profile\": *\"//' -e 's/\".*$//g'`"
 
-  if [ "X$SSM_INSTANCE_NAME" != "X" ] ; then
-    export INSTANCE_ID=$(aws ssm describe-instance-information --filters "Key=tag:Name,Values=$SSM_INSTANCE_NAME" | jq -r '.InstanceInformationList[].InstanceId')
-    export GATEWAY_HOST=$INSTANCE_ID
-    PROXY_CMD="sh -c \\\"aws ssm start-session --target $INSTANCE_ID --document-name AWS-StartSSHSession\\\""
-    export SSH_CMD="$SSH_CMD -o ProxyCommand=\"$PROXY_CMD\""
-  fi
-
   if [ "X$CREATE" = X -o "X$GATEWAY_HOST" = X ] ; then
     # No tunnel - connect directly to target host
     do_tunnel=''
@@ -74,6 +67,13 @@ else
     exec 2>/tmp/t2
     set -x
     env >&2
+  fi
+
+  if [ "X$SSM_INSTANCE_NAME" != "X" ] ; then
+    export INSTANCE_ID=$(aws ssm describe-instance-information --filters "Key=tag:Name,Values=$SSM_INSTANCE_NAME" | jq -r '.InstanceInformationList[].InstanceId')
+    export GATEWAY_HOST=$INSTANCE_ID
+    PROXY_CMD="sh -c \\\"aws ssm start-session --target $INSTANCE_ID --document-name AWS-StartSSHSession\\\""
+    export SSH_CMD="$SSH_CMD -o ProxyCommand=\"$PROXY_CMD\""
   fi
 
   gw="$GATEWAY_HOST"
