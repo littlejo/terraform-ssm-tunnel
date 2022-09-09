@@ -1,70 +1,70 @@
 
 variable "create" {
-  type = bool
+  type        = bool
   description = "If false, do nothing and return target host"
-  default = true
+  default     = true
 }
 
 variable "python_cmd" {
-  type = string
+  type        = string
   description = "Command to run python"
-  default = "python"
+  default     = "python"
 }
 
 variable "shell_cmd" {
-  type = string
+  type        = string
   description = "Command to run a shell"
-  default = "bash"
+  default     = "bash"
 }
 
 variable "ssh_cmd" {
-  type = string
+  type        = string
   description = "Shell command to use to start ssh client"
-  default = "ssh -o StrictHostKeyChecking=no"
+  default     = "ssh -o StrictHostKeyChecking=no"
 }
 
 variable "local_host" {
-  type = string
+  type        = string
   description = "Local host name or IP. Set only if you cannot use the '127.0.0.1' default value"
-  default="127.0.0.1"
+  default     = "127.0.0.1"
 }
 
 variable "target_host" {
-  type = string
+  type        = string
   description = "The target host. Name will be resolved by gateway"
 }
 
 variable "target_port" {
-  type = number
+  type        = number
   description = "Target port number"
 }
 
 variable "gateway_host" {
-  type = any
-  default = ""
+  type        = any
+  default     = ""
   description = "Name or IP of SSH gateway - empty string if no gateway (direct connection)"
 }
 
 variable "gateway_user" {
-  type = any
+  type        = any
   description = "User to use on SSH gateway (default = empty string = current username)"
-  default = ""
+  default     = ""
 }
 
 variable "gateway_port" {
-  type = number
+  type        = number
   description = "Gateway port"
-  default = 22
+  default     = 22
 }
 
 variable "timeout" {
-  type = string
+  type        = string
   description = "Timeout value ensures tunnel won't remain open forever"
-  default = "30m"
+  default     = "30m"
 }
 
 variable "ssh_tunnel_check_sleep" {
-  type = string
+  type        = string
   description = "extra time to wait for ssh tunnel to connect"
-  default = "0s"
+  default     = "0s"
 }
