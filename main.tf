@@ -24,6 +24,7 @@ data "external" "ssh_tunnel" {
     gateway_user           = var.gateway_user,
     shell_cmd              = var.shell_cmd,
     ssh_tunnel_check_sleep = var.ssh_tunnel_check_sleep
+    ssm_instance_name      = var.ssm_instance_name
     create                 = (var.create ? "y" : "")
   }
 }
