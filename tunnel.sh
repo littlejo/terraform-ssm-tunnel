@@ -72,11 +72,9 @@ else
   if [ "X$SSM_INSTANCE_NAME" != "X" ] ; then
     export INSTANCE_ID=$(aws ssm describe-instance-information --filters "Key=tag:Name,Values=$SSM_INSTANCE_NAME" | jq -r '.InstanceInformationList[].InstanceId')
     export GATEWAY_HOST=$INSTANCE_ID
-    PROXY_CMD="sh -c \\\"aws ssm start-session --target $INSTANCE_ID --document-name AWS-StartSSHSession\\\""
-    export SSH_CMD_OPT="-o ProxyCommand=\"$PROXY_CMD\""
     gw="$GATEWAY_HOST"
     [ "X$GATEWAY_USER" = X ] || gw="$GATEWAY_USER@$GATEWAY_HOST"
-    $SSH_CMD -o ProxyCommand=\"$PROXY_CMD\" -N -L $LOCAL_HOST:$LOCAL_PORT:$TARGET_HOST:$TARGET_PORT -p $GATEWAY_PORT $gw &
+    $SSH_CMD -o ProxyCommand=\"sh -c \\\"aws ssm start-session --target $INSTANCE_ID --document-name AWS-StartSSHSession\\\"\" -N -L $LOCAL_HOST:$LOCAL_PORT:$TARGET_HOST:$TARGET_PORT -p $GATEWAY_PORT $gw &
   else
     gw="$GATEWAY_HOST"
     [ "X$GATEWAY_USER" = X ] || gw="$GATEWAY_USER@$GATEWAY_HOST"
