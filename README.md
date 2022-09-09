@@ -47,7 +47,26 @@ As you can see in the example below, using a provider alias is encouraged as
 it is cleaner and makes it possible from a single provider to combine access to
 multiple targets, either tunneled or not.
 
-## Example
+## Examples
+
+### SSM
+
+    module "ssh_tunnel" {
+      source = "github.com/littlejo/terraform-ssm-tunnel"
+    
+      target_host  = split("https://", data.aws_eks_cluster.this.endpoint)[1]
+      target_port  = "443"
+      aws_profile  = "YOUR_PROFILE_TO_ACCESS_YOUR_BASTION"
+      gateway_user = "ec2-user"
+    
+      ssm_instance_name = "bastion"
+    }
+    
+    data "aws_eks_cluster" "this" {
+      name = "eks_cluster"
+    }
+
+### SSH
 
     # On AWS, if your bastions are in an autoscaling group,here's a way
     # to get a public IP address to use as gateway :
@@ -126,6 +145,7 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_aws_profile"></a> [aws\_profile](#input\_aws\_profile) | aws profile | `string` | `""` | no |
 | <a name="input_create"></a> [create](#input\_create) | If false, do nothing and return target host | `bool` | `true` | no |
 | <a name="input_gateway_host"></a> [gateway\_host](#input\_gateway\_host) | Name or IP of SSH gateway - empty string if no gateway (direct connection) | `any` | `""` | no |
 | <a name="input_gateway_port"></a> [gateway\_port](#input\_gateway\_port) | Gateway port | `number` | `22` | no |
@@ -133,8 +153,9 @@ No modules.
 | <a name="input_local_host"></a> [local\_host](#input\_local\_host) | Local host name or IP. Set only if you cannot use the '127.0.0.1' default value | `string` | `"127.0.0.1"` | no |
 | <a name="input_python_cmd"></a> [python\_cmd](#input\_python\_cmd) | Command to run python | `string` | `"python"` | no |
 | <a name="input_shell_cmd"></a> [shell\_cmd](#input\_shell\_cmd) | Command to run a shell | `string` | `"bash"` | no |
-| <a name="input_ssh_cmd"></a> [ssh\_cmd](#input\_ssh\_cmd) | Shell command to use to start ssh client | `string` | `"ssh"` | no |
+| <a name="input_ssh_cmd"></a> [ssh\_cmd](#input\_ssh\_cmd) | Shell command to use to start ssh client | `string` | `"ssh -o StrictHostKeyChecking=no"` | no |
 | <a name="input_ssh_tunnel_check_sleep"></a> [ssh\_tunnel\_check\_sleep](#input\_ssh\_tunnel\_check\_sleep) | extra time to wait for ssh tunnel to connect | `string` | `"0s"` | no |
+| <a name="input_ssm_instance_name"></a> [ssm\_instance\_name](#input\_ssm\_instance\_name) | ssm instance name (for aws) | `string` | `""` | no |
 | <a name="input_target_host"></a> [target\_host](#input\_target\_host) | The target host. Name will be resolved by gateway | `string` | n/a | yes |
 | <a name="input_target_port"></a> [target\_port](#input\_target\_port) | Target port number | `number` | n/a | yes |
 | <a name="input_timeout"></a> [timeout](#input\_timeout) | Timeout value ensures tunnel won't remain open forever | `string` | `"30m"` | no |
@@ -144,5 +165,6 @@ No modules.
 | Name | Description |
 |------|-------------|
 | <a name="output_host"></a> [host](#output\_host) | Host to connect to |
+| <a name="output_kubernetes_host"></a> [kubernetes\_host](#output\_kubernetes\_host) | Host to connect to |
 | <a name="output_port"></a> [port](#output\_port) | Port number to connect to |
 <!-- END_TF_DOCS -->
