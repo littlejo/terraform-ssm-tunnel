@@ -1,5 +1,6 @@
 locals {
-  port = var.local_port == null ? data.external.ssh_tunnel.result.port : var.local_port
+  port = data.external.ssh_tunnel.result.port
+  local_port = var.local_port == null ? data.external.free_port.result.port : var.local_port
   host = data.external.ssh_tunnel.result.host
 }
 
@@ -20,7 +21,7 @@ data "external" "ssh_tunnel" {
     timeout                = var.timeout,
     ssh_cmd                = var.ssh_cmd,
     local_host             = var.local_host,
-    local_port             = local.port,
+    local_port             = local.local_port,
     target_host            = var.target_host,
     target_port            = var.target_port,
     gateway_host           = var.gateway_host,
