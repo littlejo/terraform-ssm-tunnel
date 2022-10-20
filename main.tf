@@ -1,5 +1,5 @@
 locals {
-  port = data.external.ssh_tunnel.result.port
+  port = var.local_port == null ? data.external.ssh_tunnel.result.port : var.local_port
   host = data.external.ssh_tunnel.result.host
 }
 

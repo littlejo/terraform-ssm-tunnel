@@ -1,4 +1,3 @@
-
 variable "create" {
   type        = bool
   description = "If false, do nothing and return target host"
@@ -32,6 +31,12 @@ variable "local_host" {
 variable "target_host" {
   type        = string
   description = "The target host. Name will be resolved by gateway"
+}
+
+variable "local_port" {
+  type        = number
+  description = "Local port number"
+  default     = null
 }
 
 variable "target_port" {
